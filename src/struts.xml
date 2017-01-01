@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<package name="default" namespace="/" extends="struts-default">
+		<interceptors>
+			<interceptor name="loginInterceptor"
+				class="cn.kcn.user.web.interceptor.LoginInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="loginInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<global-results>
+			<result name="login">/login/login.jsp</result>
+		</global-results>
+
+		<action name="user_*" class="cn.kcn.user.web.action.UserAction"
+			method="{1}">
+			<result name="login_success">/login/home.jsp</result>
+
+			<result name="login_input">/login/login.jsp</result>
+
+			<result name="list_success">/user/list.jsp</result>
+
+			<result name="add_success" type="redirectAction">user_list</result>
+			<result name="add_input">/user/add.jsp</result>
+
+			<result name="listSelect_success">/user/list.jsp</result>
+
+			<result name="del_success" type="redirectAction">user_list</result>
+
+			<result name="findById_success">/user/view.jsp</result>
+
+			<result name="updateForFind_success">/user/edit.jsp</result>
+
+			<result name="download_success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="contentDisposition">attachment;filename=${downloadFilename}</param>
+				<param name="inputStream">${inputStream}</param>
+			</result>
+
+			<interceptor-ref name="myStack" />
+		</action>
+
+	</package>
+</struts>
